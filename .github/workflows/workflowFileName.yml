@@ -29,11 +29,7 @@ jobs:
         # Specify the path to the ADF ARM template. In this scenario, the workflow is in the same branch, 
         # hence we only add the folder and arm template name to the path
         template: ./adfgitactioncicd/ARMTemplateForFactory.json
-        parameters: /adfgitactioncicd/ARMTemplateParametersForFactory.json # Set this to the location of your parameters file
-        parameters: rgName=${{env.RESOURCEGROUP_NAME}}
+        parameters: /adfgitactioncicd/ARMTemplateParametersForFactory.json AZUREBLOBSTORAGE1_CONNECTIONSTRING=${{vars.AZUREBLOBSTORAGE1_CONNECTIONSTRING}} factoryName=${{secrets.factory_name}}
         
         # Incremental (only add resources to resource group) or Complete (remove extra resources from resource group) or Validate (only validates the template).
         deploymentMode: Incremental
-        # Supply deployment parameter values. In this simple scenario, 
-        # I am only passing the name of the target ADF to which this is being deployed
-        parameters: factoryName=${{secrets.factory_name}}
