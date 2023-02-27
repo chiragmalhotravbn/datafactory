@@ -4,11 +4,7 @@
 # For more samples to get started with GitHub Action workflows to deploy to Azure: https://github.com/Azure/actions-workflow-samples
 
 on:
-  push:
-    branches:
-      - adf_publish
   workflow_dispatch:
-
 
 jobs:
   build:
@@ -33,6 +29,8 @@ jobs:
         # Specify the path to the ADF ARM template. In this scenario, the workflow is in the same branch, 
         # hence we only add the folder and arm template name to the path
         template: ./adfgitactioncicd/ARMTemplateForFactory.json
+        parameters: /adfgitactioncicd/ARMTemplateParametersForFactory.json # Set this to the location of your parameters file
+        parameters: rgName=${{env.RESOURCEGROUP_NAME}}
         
         # Incremental (only add resources to resource group) or Complete (remove extra resources from resource group) or Validate (only validates the template).
         deploymentMode: Incremental
