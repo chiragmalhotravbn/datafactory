@@ -4,6 +4,9 @@
 	"parameters": {
 		"factoryName": {
 			"value": "adfgitactioncicd"
+		},
+		"AzureBlobStorage1_connectionString": {
+			"value": ""
 		}
 	}
 }
