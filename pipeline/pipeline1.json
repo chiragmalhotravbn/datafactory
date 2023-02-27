@@ -5,6 +5,7 @@
 		"activities": [
 			{
 				"name": "Wait1",
+				"description": "xdssx",
 				"type": "Wait",
 				"dependsOn": [],
 				"userProperties": [],
