@@ -15,7 +15,6 @@ jobs:
       runs-on: ubuntu-latest
       environment: QA
       env:
-        credentials : ${{secrets.AZURE_CREDENTIALS}}
         Azure_RG : ${{secrets.AZURE_RG}}
         AzureBlobStorage1_connectionString: ${{vars.AzureBlobStorage1_connectionString}}
         factory_name: ${{vars.factory_name}}
@@ -27,7 +26,7 @@ jobs:
         uses: Azure/login@v1.4.3
         with:
           # Paste output of `az ad sp create-for-rbac` as value of secret variable: AZURE_CREDENTIALS
-          creds: $credentials
+          creds: ${{secrets.AZURE_CREDENTIALS}}
 
       - name: Deploy Azure Resource Manager (ARM) Template
         uses: Azure/arm-deploy@v1.0.6
@@ -50,7 +49,6 @@ jobs:
       runs-on: ubuntu-latest
       environment: prod
       env:
-        credentials : ${{secrets.AZURE_CREDENTIALS}}
         Azure_RG : ${{secrets.AZURE_RG}}
         AzureBlobStorage1_connectionString: ${{vars.AzureBlobStorage1_connectionString}}
         factory_name: ${{vars.factory_name}}
@@ -63,7 +61,7 @@ jobs:
         uses: Azure/login@v1.4.3
         with:
           # Paste output of `az ad sp create-for-rbac` as value of secret variable: AZURE_CREDENTIALS
-          creds: $credentials
+          creds: ${{secrets.AZURE_CREDENTIALS}}
 
       - name: Deploy Azure Resource Manager (ARM) Template
         uses: Azure/arm-deploy@v1.0.6
