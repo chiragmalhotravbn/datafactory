@@ -13,15 +13,14 @@ env:
   PROD_VARIABLE_1: ${{ env.factory_name }}
 
 jobs:
-build:
   deploy_qa:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Print QA Variable
-        run: echo "QA_VARIABLE_1: ${{ env.QA_VARIABLE_1 }}"
+        runs-on: ubuntu-latest
+        steps:
+        - name: Print QA Variable
+          run: echo ${{ env.QA_VARIABLE_1 }}
         
   deploy_prod:
     runs-on: ubuntu-latest
     steps:
       - name: Print Prod Variable
-        run: echo "PROD_VARIABLE_1: ${{ env.PROD_VARIABLE_1 }}"
+        run: echo ${{ env.PROD_VARIABLE_1 }}
