@@ -13,6 +13,7 @@ env:
   PROD_VARIABLE_1: ${{ env.factory_name }}
 
 jobs:
+build:
   deploy_qa:
     runs-on: ubuntu-latest
     steps:
