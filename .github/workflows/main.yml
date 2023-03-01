@@ -9,6 +9,7 @@ on:
 jobs:
   deploy_qa:
         runs-on: ubuntu-latest
+        environment: QA
         env:
           QA_VARIABLE_1: ${{ env.factory_name }}
         steps:
