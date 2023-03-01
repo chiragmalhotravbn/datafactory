@@ -15,7 +15,6 @@ jobs:
       runs-on: ubuntu-latest
       environment: QA
       env:
-        Azure_RG : ${{vars.Azure_RG}}
         AzureBlobStorage1_connectionString: ${{vars.AzureBlobStorage1_connectionString}}
         factory_name: ${{vars.factory_name}}
       name: 'This deploys to QA'
@@ -34,7 +33,7 @@ jobs:
           # Provide the scope of the deployment. Valid values are: 'resourcegroup', 'managementgroup', 'subscription'
           scope: 'resourcegroup'
           # Target resource group of the deployment.
-          resourceGroupName: $Azure_RG
+          resourceGroupName: ${{vars.Azure_RG}}
           # Specify the path to the ADF ARM template. In this scenario, the workflow is in the same branch, 
           # hence we only add the folder and arm template name to the path
           template: ./devcicdtesta/ARMTemplateForFactory.json
@@ -49,7 +48,6 @@ jobs:
       runs-on: ubuntu-latest
       environment: prod
       env:
-        Azure_RG : ${{vars.AZURE_RG}}
         AzureBlobStorage1_connectionString: ${{vars.AzureBlobStorage1_connectionString}}
         factory_name: ${{vars.factory_name}}
       name: 'This deploys to Prod'
@@ -69,7 +67,7 @@ jobs:
           # Provide the scope of the deployment. Valid values are: 'resourcegroup', 'managementgroup', 'subscription'
           scope: 'resourcegroup'
           # Target resource group of the deployment.
-          resourceGroupName: $Azure_RG
+          resourceGroupName: ${{vars.Azure_RG}}
           # Specify the path to the ADF ARM template. In this scenario, the workflow is in the same branch, 
           # hence we only add the folder and arm template name to the path
           template: ./devcicdtesta/ARMTemplateForFactory.json
