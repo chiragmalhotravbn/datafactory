@@ -12,7 +12,7 @@ jobs:
         environment: QA
         env:
           QA_VARIABLE_1: ${{ vars.factory_name }}
-          test: ${{secrets.AZURE_CREDENTIALS}}
+          test: ${{env.AZURE_CREDENTIALS}}
         steps:
         - name: Print QA Variable
           run: echo $QA_VARIABLE_1     
