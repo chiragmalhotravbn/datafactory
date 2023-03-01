@@ -10,7 +10,7 @@ jobs:
   deploy_qa:
         runs-on: ubuntu-latest
         env:
-          QA_VARIABLE_1: ${{ env.qa.factory_name }}
+          QA_VARIABLE_1: ${{ env.factory_name }}
         steps:
         - name: Print QA Variable
           run: echo $QA_VARIABLE_1
