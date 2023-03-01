@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - adf_publish
+  workflow_dispatch:
 
 env:
   QA_VARIABLE_1: ${{ env.factory_name }}
