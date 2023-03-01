@@ -9,7 +9,9 @@ on:
     branches:
       - adf_publish
   workflow_dispatch:
-
+env:
+  ARMTemplate: ./devcicdtesta/ARMTemplateForFactory.json
+  ARMParameter: ./devcicdtesta/ARMTemplateParametersForFactory.json
 jobs:
     deploy-to-qa:
       runs-on: ubuntu-latest
@@ -23,6 +25,20 @@ jobs:
         with:
           # Paste output of `az ad sp create-for-rbac` as value of secret variable: AZURE_CREDENTIALS
           creds: ${{secrets.AZURE_CREDENTIALS}}
+      
+      - name: Install Az PowerShell module
+        run: if('${{ inputs.skipAzModuleInstallation }}' -ne 'true') { Install-Module -Name Az -Scope CurrentUser -Repository PSGallery -Force }
+        shell: pwsh
+
+      - name: Run Pre-deployment script
+        run: |
+          ${{ github.action_path }}/PrePostDeploymentScript.ps1 `
+            -armTemplate " ${{env.ARMTemplate}}" `
+            -ResourceGroupName "${{vars.Azure_RG}}" `
+            -DataFactoryName "${{vars.factory_name}}" `
+            -predeployment $true `
+            -deleteDeployment $false
+        shell: pwsh
 
       - name: Deploy Azure Resource Manager (ARM) Template
         uses: Azure/arm-deploy@v1.0.6
@@ -33,14 +49,24 @@ jobs:
           resourceGroupName: ${{vars.Azure_RG}}
           # Specify the path to the ADF ARM template. In this scenario, the workflow is in the same branch, 
           # hence we only add the folder and arm template name to the path
-          template: ./devcicdtesta/ARMTemplateForFactory.json
-          parameters: ./devcicdtesta/ARMTemplateParametersForFactory.json 
+          template:  ${{env.ARMTemplate}}
+          parameters: ${{env.ARMParameter}}
             AzureBlobStorage1_connectionString=${{vars.AzureBlobStorage1_connectionString}}
             factoryName=${{vars.factory_name}}
 
           # Incremental (only add resources to resource group) or Complete (remove extra resources from resource group) or Validate (only validates the template).
           deploymentMode: Incremental
-
+      
+      - name: Run Post-deployment script
+        run: |
+          ${{ github.action_path }}/PrePostDeploymentScript.ps1 `
+            -armTemplate "${{ inputs.armTemplateFile }}" `
+            -ResourceGroupName "${{ inputs.resourceGroupName }}" `
+            -DataFactoryName '${{ inputs.dataFactoryName }}' `
+            -predeployment $false `
+            -deleteDeployment $true
+        shell: pwsh
+        
     deploy-to-prod:
       runs-on: ubuntu-latest
       environment: prod
@@ -54,6 +80,20 @@ jobs:
         with:
           # Paste output of `az ad sp create-for-rbac` as value of secret variable: AZURE_CREDENTIALS
           creds: ${{secrets.AZURE_CREDENTIALS}}
+          
+      - name: Install Az PowerShell module
+        run: if('${{ inputs.skipAzModuleInstallation }}' -ne 'true') { Install-Module -Name Az -Scope CurrentUser -Repository PSGallery -Force }
+        shell: pwsh
+
+      - name: Run Pre-deployment script
+        run: |
+          ${{ github.action_path }}/PrePostDeploymentScript.ps1 `
+            -armTemplate " ${{env.ARMTemplate}}" `
+            -ResourceGroupName "${{vars.Azure_RG}}" `
+            -DataFactoryName "${{vars.factory_name}}" `
+            -predeployment $true `
+            -deleteDeployment $false
+        shell: pwsh
 
       - name: Deploy Azure Resource Manager (ARM) Template
         uses: Azure/arm-deploy@v1.0.6
@@ -64,10 +104,20 @@ jobs:
           resourceGroupName: ${{vars.Azure_RG}}
           # Specify the path to the ADF ARM template. In this scenario, the workflow is in the same branch, 
           # hence we only add the folder and arm template name to the path
-          template: ./devcicdtesta/ARMTemplateForFactory.json
-          parameters: ./devcicdtesta/ARMTemplateParametersForFactory.json 
+          template:  ${{env.ARMTemplate}}
+          parameters: ${{env.ARMParameter}}
             AzureBlobStorage1_connectionString=${{vars.AzureBlobStorage1_connectionString}}
             factoryName=${{vars.factory_name}}
 
           # Incremental (only add resources to resource group) or Complete (remove extra resources from resource group) or Validate (only validates the template).
           deploymentMode: Incremental
+
+      - name: Run Post-deployment script
+        run: |
+          ${{ github.action_path }}/PrePostDeploymentScript.ps1 `
+            -armTemplate " ${{env.ARMTemplate}}" `
+            -ResourceGroupName "${{vars.Azure_RG}}" `
+            -DataFactoryName "${{vars.factory_name}}" `
+            -predeployment $false `
+            -deleteDeployment $true
+        shell: pwsh
