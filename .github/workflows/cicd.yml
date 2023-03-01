@@ -18,8 +18,8 @@ jobs:
       env:
         Credentials : ${{secrets.AZURE_CREDENTIALS}}
         Azure_RG : ${{secrets.AZURE_RG}}
-        AzureBlobStorage1_connectionString: ${{var.AzureBlobStorage1_connectionString}}
-        factory_name: ${{var.factory_name}}
+        AzureBlobStorage1_connectionString: ${{vars.AzureBlobStorage1_connectionString}}
+        factory_name: ${{vars.factory_name}}
       name: 'This deploys to QA'
       steps:
       - uses: actions/checkout@v3
@@ -53,8 +53,8 @@ jobs:
       env:
         Credentials : ${{secrets.AZURE_CREDENTIALS}}
         Azure_RG : ${{secrets.AZURE_RG}}
-        AzureBlobStorage1_connectionString: ${{var.AzureBlobStorage1_connectionString}}
-        factory_name: ${{var.factory_name}}
+        AzureBlobStorage1_connectionString: ${{vars.AzureBlobStorage1_connectionString}}
+        factory_name: ${{vars.factory_name}}
       name: 'This deploys to Prod'
       needs: deploy-to-qa
       steps:
