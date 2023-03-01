@@ -33,7 +33,7 @@ jobs:
       - name: Run Pre-deployment script
         shell: pwsh
         run: |
-          ${{ github.action_path }}/PrePostDeploymentScript.ps1 `
+          powershell.exe -ExecutionPolicy Bypass -File ./${{ github.action_path }}/PrePostDeploymentScript.ps1 `
             -armTemplate " ${{env.ARMTemplate}}" `
             -ResourceGroupName "${{vars.Azure_RG}}" `
             -DataFactoryName "${{vars.factory_name}}" `
