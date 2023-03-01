@@ -12,15 +12,6 @@ jobs:
         environment: QA
         env:
           QA_VARIABLE_1: ${{ env.qa.factory_name }}
-          test: ${{env.AZURE_CREDENTIALS}}
         steps:
         - name: Print QA Variable
-          run: echo $QA_VARIABLE_1     
-  deploy_prod:
-    runs-on: ubuntu-latest
-    environment: prod
-    env:
-        test: ${{secrets.AZURE_CREDENTIALS}}
-    steps:
-      - name: Print Prod Variable
-        run: echo $test
+          run: echo $QA_VARIABLE_1
