@@ -10,14 +10,17 @@ jobs:
   deploy_qa:
         runs-on: ubuntu-latest
         environment: QA
+        env:
+          QA_VARIABLE_1: ${{ vars.factory_name }}
+          test: ${{secrets.AZURE_CREDENTIALS}}
         steps:
         - name: Print QA Variable
-          run: echo ${{var.factory_name}}        
+          run: echo $QA_VARIABLE_1     
   deploy_prod:
     runs-on: ubuntu-latest
     environment: prod
     env:
-        PROD_VARIABLE_1: ${{ vars.factory_name }}
+        test: ${{secrets.AZURE_CREDENTIALS}}
     steps:
       - name: Print Prod Variable
-        run: echo $PROD_VARIABLE_1
+        run: echo $test
