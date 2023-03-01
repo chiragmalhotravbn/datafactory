@@ -14,9 +14,6 @@ jobs:
     deploy-to-qa:
       runs-on: ubuntu-latest
       environment: QA
-      env:
-        AzureBlobStorage1_connectionString: ${{vars.AzureBlobStorage1_connectionString}}
-        factory_name: ${{vars.factory_name}}
       name: 'This deploys to QA'
       steps:
       - uses: actions/checkout@v3
@@ -38,8 +35,8 @@ jobs:
           # hence we only add the folder and arm template name to the path
           template: ./devcicdtesta/ARMTemplateForFactory.json
           parameters: ./devcicdtesta/ARMTemplateParametersForFactory.json 
-            AzureBlobStorage1_connectionString=$AzureBlobStorage1_connectionString
-            factoryName=$factory_name
+            AzureBlobStorage1_connectionString=${{vars.AzureBlobStorage1_connectionString}}
+            factoryName=${{vars.factory_name}}
 
           # Incremental (only add resources to resource group) or Complete (remove extra resources from resource group) or Validate (only validates the template).
           deploymentMode: Incremental
@@ -47,9 +44,6 @@ jobs:
     deploy-to-prod:
       runs-on: ubuntu-latest
       environment: prod
-      env:
-        AzureBlobStorage1_connectionString: ${{vars.AzureBlobStorage1_connectionString}}
-        factory_name: ${{vars.factory_name}}
       name: 'This deploys to Prod'
       needs: deploy-to-qa
       steps:
@@ -72,8 +66,8 @@ jobs:
           # hence we only add the folder and arm template name to the path
           template: ./devcicdtesta/ARMTemplateForFactory.json
           parameters: ./devcicdtesta/ARMTemplateParametersForFactory.json 
-            AzureBlobStorage1_connectionString=$AzureBlobStorage1_connectionString
-            factoryName=$factory_name
+            AzureBlobStorage1_connectionString=${{vars.AzureBlobStorage1_connectionString}}
+            factoryName=${{vars.factory_name}}
 
           # Incremental (only add resources to resource group) or Complete (remove extra resources from resource group) or Validate (only validates the template).
           deploymentMode: Incremental
