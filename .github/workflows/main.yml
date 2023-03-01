@@ -14,7 +14,7 @@ jobs:
   deploy_qa:
         runs-on: ubuntu-latest
         env:
-          QA_VARIABLE_1: ${{ env.factory_name }}
+          QA_VARIABLE_1: ${{ env.vars.factory_name }}
         steps:
         - name: Print QA Variable
           run: echo QA_VARIABLE_1
@@ -22,7 +22,7 @@ jobs:
   deploy_prod:
     runs-on: ubuntu-latest
     env:
-        PROD_VARIABLE_1: ${{ env.factory_name }}
+        PROD_VARIABLE_1: ${{ env.vars.factory_name }}
     steps:
       - name: Print Prod Variable
         run: echo PROD_VARIABLE_1
