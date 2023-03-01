@@ -4,11 +4,7 @@ name: My Workflow
 on:
   push:
     branches:
-      - adf_publish
-  workflow_dispatch:
-
-
-
+      - main
 
 jobs:
   deploy_qa:
