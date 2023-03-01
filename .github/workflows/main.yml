@@ -9,16 +9,18 @@ on:
 jobs:
   deploy_qa:
         runs-on: ubuntu-latest
+        environment: QA
         env:
-          QA_VARIABLE_1: ${{ env.vars.factory_name }}
+          QA_VARIABLE_1: ${{ vars.factory_name }}
         steps:
         - name: Print QA Variable
           run: echo QA_VARIABLE_1
         
   deploy_prod:
     runs-on: ubuntu-latest
+    environment: prod
     env:
-        PROD_VARIABLE_1: ${{ env.vars.factory_name }}
+        PROD_VARIABLE_1: ${{ vars.factory_name }}
     steps:
       - name: Print Prod Variable
         run: echo PROD_VARIABLE_1
