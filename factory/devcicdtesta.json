@@ -1,0 +1,9 @@
+{
+	"name": "devcicdtesta",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "66823a2d-2a2b-42fc-ad27-14491e32bf5f",
+		"tenantId": "3fc0de1f-1da8-4d7b-bfb8-9c26ff40251d"
+	}
+}
