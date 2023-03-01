@@ -11,7 +11,7 @@ jobs:
         runs-on: ubuntu-latest
         environment: QA
         env:
-          QA_VARIABLE_1: ${{ vars.factory_name }}
+          QA_VARIABLE_1: ${{ env.qa.factory_name }}
           test: ${{env.AZURE_CREDENTIALS}}
         steps:
         - name: Print QA Variable
