@@ -33,8 +33,8 @@ jobs:
       - name: Run Pre-deployment script
         shell: pwsh
         run: |
-          devcicdtesta/PrePostDeploymentScript.ps1 `
-                -armTemplate "ARMTemplateForFactory.json" `
+          ./PrePostDeploymentScript.ps1 `
+                -armTemplate "devcicdtesta/ARMTemplateForFactory.json" `
                 -ResourceGroupName "${{vars.Azure_RG}}" `
                 -DataFactoryName "${{vars.factory_name}}" `
                 -predeployment $true `
