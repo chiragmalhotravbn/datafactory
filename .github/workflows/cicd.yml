@@ -72,6 +72,7 @@ jobs:
       
       # Run Post-deployment script
       - name: Run Post-deployment script
+        shell: pwsh
         run: |
           ./PrePostDeploymentScript.ps1 `
              	-armTemplate "devcicdtesta/ARMTemplateForFactory.json" `
@@ -80,8 +81,7 @@ jobs:
                 -ArmTemplateParameters "devcicdtesta/ARMTemplateParametersForFactory.json" `
                 -predeployment $false `
                 -deleteDeployment $true
-        shell: pwsh
-        
+                
     deploy-to-Prod: # The name of the job
       runs-on: ubuntu-latest # The operating system that the job will run on
       environment: prod # The environment that the job is deploying to
@@ -105,14 +105,7 @@ jobs:
       # Run Pre-deployment script
       - name: Run Pre-deployment script
         shell: pwsh
-        env:
-          SP_ID: ${{ secrets.CLIENT_ID }}
-          SP_SECRET: ${{ secrets.CLIENT_SECRET }}
-          SP_TENANT: ${{ secrets.TENANT_ID }}
         run: |
-          $securePassword = ConvertTo-SecureString -String $env:SP_SECRET -AsPlainText -Force
-          $psCredential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList ($env:SP_ID, $securePassword)
-          Connect-AzAccount -ServicePrincipal -Credential $psCredential -TenantId $env:SP_TENANT
           ./PrePostDeploymentScript.ps1 `
                 -armTemplate "devcicdtesta/ARMTemplateForFactory.json" `
                 -ResourceGroupName "${{vars.Azure_RG}}" `
@@ -141,14 +134,8 @@ jobs:
       
       # Run Post-deployment script
       - name: Run Post-deployment script
-        env:
-          SP_ID: ${{ secrets.CLIENT_ID }}
-          SP_SECRET: ${{ secrets.CLIENT_SECRET }}
-          SP_TENANT: ${{ secrets.TENANT_ID }}
+        shell: pwsh
         run: |
-          $securePassword = ConvertTo-SecureString -String $env:SP_SECRET -AsPlainText -Force
-          $psCredential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList ($env:SP_ID, $securePassword)
-          Connect-AzAccount -ServicePrincipal -Credential $psCredential -TenantId $env:SP
           ./PrePostDeploymentScript.ps1 `
              	-armTemplate "devcicdtesta/ARMTemplateForFactory.json" `
                 -ResourceGroupName "${{vars.Azure_RG}}" `
@@ -156,4 +143,3 @@ jobs:
                 -ArmTemplateParameters "devcicdtesta/ARMTemplateParametersForFactory.json" `
                 -predeployment $false `
                 -deleteDeployment $true
-        shell: pwsh
