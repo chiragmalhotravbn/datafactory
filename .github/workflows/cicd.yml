@@ -34,7 +34,7 @@ jobs:
         shell: pwsh
         run: |
           ./PrePostDeploymentScript.ps1 `
-                -armTemplate "ARMTemplateForFactory.json" `
+                -armTemplate "devcicdtesta/ARMTemplateForFactory.json" `
                 -ResourceGroupName "${{vars.Azure_RG}}" `
                 -DataFactoryName "${{vars.factory_name}}" `
                 -predeployment $true `
@@ -58,8 +58,9 @@ jobs:
           deploymentMode: Incremental
       
       - name: Run Post-deployment script
-        run: ./PrePostDeploymentScript.ps1 `
-                -armTemplate "ARMTemplateForFactory.json" `
+        run: |
+          ./PrePostDeploymentScript.ps1 `
+             	-armTemplate "devcicdtesta/ARMTemplateForFactory.json" `
                 -ResourceGroupName "${{ inputs.resourceGroupName }}" `
                 -DataFactoryName '${{ inputs.dataFactoryName }}' `
                 -predeployment $false `
@@ -114,7 +115,7 @@ jobs:
       - name: Run Post-deployment script
         shell: pwsh
         run: |
-          ${{ github.action_path }}/PrePostDeploymentScript.ps1 `
+          ./PrePostDeploymentScript.ps1 `
             -armTemplate " ${{env.ARMTemplate}}" `
             -ResourceGroupName "${{vars.Azure_RG}}" `
             -DataFactoryName "${{vars.factory_name}}" `
