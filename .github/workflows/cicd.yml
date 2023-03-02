@@ -38,4 +38,5 @@ jobs:
                 -ResourceGroupName "${{vars.Azure_RG}}" `
                 -DataFactoryName "${{vars.factory_name}}" `
                 -predeployment $true `
-                -deleteDeployment $false
+                -deleteDeployment $false `
+                -cred ${{secrets.AZURE_CREDENTIALS}}
