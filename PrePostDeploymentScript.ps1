@@ -8,4 +8,5 @@ param
     [parameter(Mandatory = $false)] [string] $secrets
 )
 
-Write-output "test: $secrets.clientId"
+$ClientID = $secrets.clientId
+Write-output "test: $ClientID" 
