@@ -1,3 +1,5 @@
+# This is a workflow to help you deploy an ADF ARM template to a higher environmentss
+
 name: ADF_CICD
 on:
   push: # Trigger the workflow when there is a push event in the "adf_publish" branch
@@ -5,29 +7,33 @@ on:
       - adf_publish
   workflow_dispatch: # Allow manual triggering of the workflow using the GitHub Actions UI
 
-# Define the environment variables that will be used in the workflow
+#Define the environment variables that will be used in the workflow
 env:
   ARMTemplate: "./devcicdtesta/ARMTemplateForFactory.json"
   ARMParameter: "./devcicdtesta/ARMTemplateParametersForFactory.json"
-
-# Define the jobs that will run as part of the workflow
+  
+#Define the jobs that will run as part of the workflow
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        environment: [QA, Prod]
-    name: 'Deploying ADF to ${{ matrix.environment }} Environment'
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+    deploy-to-qa: # The name of the job
+      runs-on: ubuntu-latest # The operating system that the job will run on
+      environment: QA # The environment that the job is deploying to
+      name: 'Deploying ADF to QA Environment' # A description of the job
+      steps:
+      - uses: actions/checkout@v3 # Checkout the repository code
+
+      # Install Az PowerShell module
       - name: Install Az PowerShell module
         run: if('${{ inputs.skipAzModuleInstallation }}' -ne 'true') { Install-Module -Name Az -Scope CurrentUser -Repository PSGallery -Force }
         shell: pwsh
+      
+      # Azure Login
       - name: Azure Login
         uses: Azure/login@v1.4.3
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          # Paste output of `az ad sp create-for-rbac` as value of secret variable: AZURE_CREDENTIALS
+          creds: ${{secrets.AZURE_CREDENTIALS}}
+          
+      # Run Pre-deployment script
       - name: Run Pre-deployment script
         shell: pwsh
         env:
@@ -46,16 +52,26 @@ jobs:
                 -ArmTemplateParameters "devcicdtesta/ARMTemplateParametersForFactory.json" `
                 -predeployment $true `
                 -deleteDeployment $false
+                
+      # Deploy Azure Resource Manager (ARM) Template
       - name: Deploy Azure Resource Manager (ARM) Template
         uses: Azure/arm-deploy@v1.0.6
         with:
+          # Provide the scope of the deployment. Valid values are: 'resourcegroup', 'managementgroup', 'subscription'
           scope: 'resourcegroup'
-          resourceGroupName: ${{ vars.Azure_RG }}
-          template: ${{ env.ARMTemplate }}
-          parameters: ${{ env.ARMParameter }}
-            AzureBlobStorage1_connectionString= ${{ vars.AzureBlobStorage1_connectionString }}
-            factoryName= ${{ vars.factory_name }}
+          # Target resource group of the deployment.
+          resourceGroupName: ${{vars.Azure_RG}}
+          # Specify the path to the ADF ARM template. In this scenario, the workflow is in the same branch, 
+          # hence we only add the folder and arm template name to the path
+          template:  ${{env.ARMTemplate}}
+          parameters: ${{env.ARMParameter}}
+            AzureBlobStorage1_connectionString=${{vars.AzureBlobStorage1_connectionString}}
+            factoryName=${{vars.factory_name}}
+
+          # Incremental (only add resources to resource group) or Complete (remove extra resources from resource group) or Validate (only validates the template).
           deploymentMode: Incremental
+      
+      # Run Post-deployment script
       - name: Run Post-deployment script
         shell: pwsh
         run: |
@@ -66,4 +82,73 @@ jobs:
                 -ArmTemplateParameters "devcicdtesta/ARMTemplateParametersForFactory.json" `
                 -predeployment $false `
                 -deleteDeployment $true
-    needs: loop
+                
+    deploy-to-Prod: # The name of the job
+      runs-on: ubuntu-latest # The operating system that the job will run on
+      environment: prod # The environment that the job is deploying to
+      needs: deploy-to-qa
+      name: 'Deploying ADF to Prod Environment' # A description of the job
+      steps:
+      - uses: actions/checkout@v3 # Checkout the repository code
+
+      # Install Az PowerShell module
+      - name: Install Az PowerShell module
+        run: if('${{ inputs.skipAzModuleInstallation }}' -ne 'true') { Install-Module -Name Az -Scope CurrentUser -Repository PSGallery -Force }
+        shell: pwsh
+      
+      # Azure Login
+      - name: Azure Login
+        uses: Azure/login@v1.4.3
+        with:
+          # Paste output of `az ad sp create-for-rbac` as value of secret variable: AZURE_CREDENTIALS
+          creds: ${{secrets.AZURE_CREDENTIALS}}
+          
+      # Run Pre-deployment script
+      - name: Run Pre-deployment script
+        shell: pwsh
+        env:
+          SP_ID: ${{ secrets.CLIENT_ID }}
+          SP_SECRET: ${{ secrets.CLIENT_SECRET }}
+          SP_TENANT: ${{ secrets.TENANT_ID }}
+          subscriptionID: ${{ vars.subscription_ID }}
+        run: |
+          $securePassword = ConvertTo-SecureString -String $env:SP_SECRET -AsPlainText -Force
+          $psCredential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList ($env:SP_ID, $securePassword)
+          Connect-AzAccount -ServicePrincipal -Credential $psCredential -TenantId $env:SP_TENANT -subscriptionID $env:subscriptionID
+          ./PrePostDeploymentScript.ps1 `
+                -armTemplate "devcicdtesta/ARMTemplateForFactory.json" `
+                -ResourceGroupName "${{vars.Azure_RG}}" `
+                -DataFactoryName "${{vars.factory_name}}" `
+                -ArmTemplateParameters "devcicdtesta/ARMTemplateParametersForFactory.json" `
+                -predeployment $true `
+                -deleteDeployment $false
+                
+      # Deploy Azure Resource Manager (ARM) Template
+      - name: Deploy Azure Resource Manager (ARM) Template
+        uses: Azure/arm-deploy@v1.0.6
+        with:
+          # Provide the scope of the deployment. Valid values are: 'resourcegroup', 'managementgroup', 'subscription'
+          scope: 'resourcegroup'
+          # Target resource group of the deployment.
+          resourceGroupName: ${{vars.Azure_RG}}
+          # Specify the path to the ADF ARM template. In this scenario, the workflow is in the same branch, 
+          # hence we only add the folder and arm template name to the path
+          template:  ${{env.ARMTemplate}}
+          parameters: ${{env.ARMParameter}}
+            AzureBlobStorage1_connectionString=${{vars.AzureBlobStorage1_connectionString}}
+            factoryName=${{vars.factory_name}}
+
+          # Incremental (only add resources to resource group) or Complete (remove extra resources from resource group) or Validate (only validates the template).
+          deploymentMode: Incremental
+      
+      # Run Post-deployment script
+      - name: Run Post-deployment script
+        shell: pwsh
+        run: |
+          ./PrePostDeploymentScript.ps1 `
+             	-armTemplate "devcicdtesta/ARMTemplateForFactory.json" `
+                -ResourceGroupName "${{vars.Azure_RG}}" `
+                -DataFactoryName "${{vars.factory_name}}" `
+                -ArmTemplateParameters "devcicdtesta/ARMTemplateParametersForFactory.json" `
+                -predeployment $false `
+                -deleteDeployment $true
