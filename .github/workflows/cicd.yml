@@ -105,7 +105,14 @@ jobs:
       # Run Pre-deployment script
       - name: Run Pre-deployment script
         shell: pwsh
+        env:
+          SP_ID: ${{ secrets.CLIENT_ID }}
+          SP_SECRET: ${{ secrets.CLIENT_SECRET }}
+          SP_TENANT: ${{ secrets.TENANT_ID }}
         run: |
+          $securePassword = ConvertTo-SecureString -String $env:SP_SECRET -AsPlainText -Force
+          $psCredential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList ($env:SP_ID, $securePassword)
+          Connect-AzAccount -ServicePrincipal -Credential $psCredential -TenantId $env:SP_TENANT
           ./PrePostDeploymentScript.ps1 `
                 -armTemplate "devcicdtesta/ARMTemplateForFactory.json" `
                 -ResourceGroupName "${{vars.Azure_RG}}" `
