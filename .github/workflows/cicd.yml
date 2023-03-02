@@ -38,8 +38,7 @@ jobs:
                 -ResourceGroupName "${{vars.Azure_RG}}" `
                 -DataFactoryName "${{vars.factory_name}}" `
                 -predeployment $true `
-                -deleteDeployment $false
-		
+                -deleteDeployment $false	
       - name: Deploy Azure Resource Manager (ARM) Template
         uses: Azure/arm-deploy@v1.0.6
         with:
