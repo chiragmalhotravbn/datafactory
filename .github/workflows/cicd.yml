@@ -92,6 +92,7 @@ jobs:
     deploy-to-Prod: # The name of the job
       runs-on: ubuntu-latest # The operating system that the job will run on
       environment: prod # The environment that the job is deploying to
+      needs: deploy-to-qa
       name: 'This deploys to Prod' # A description of the job
       steps:
       - uses: actions/checkout@v3 # Checkout the repository code
