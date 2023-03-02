@@ -33,16 +33,9 @@ jobs:
       - name: Run Pre-deployment script
         shell: pwsh
         run: |
-          env:
-            AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
-          $AzureCredentials = ConvertTo-SecureString -String $env:AZURE_CREDENTIALS -AsPlainText -Force | ConvertFrom-SecureString
-          $AzureCredentialObject = ConvertFrom-Json -InputObject $AzureCredentials
-          $ServicePrincipal = New-Object Microsoft.Azure.Commands.ActiveDirectory.PSADPasswordCredential `
-                                   -Property @{ StartDate=Get-Date; EndDate=Get-Date `
-                                   .AddYears(1); KeyId=[Guid]::NewGuid(); Value=$AzureCredentialObject.clientSecret }
-          $Credential = New-Object System.Management.Automation.PSCredential `
-                                   ($AzureCredentialObject.clientId, $ServicePrincipal)
-          Connect-AzAccount -ServicePrincipal -Credential $Credential -TenantId $AzureCredentialObject.tenantId
+          $SecureStringPwd = $secrets.clientSecret.SecretText | ConvertTo-SecureString -AsPlainText -Force
+          $pscredential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList ${{CLIENT_ID}}, ${{CLIENT_SECRET}}
+          Connect-AzAccount -ServicePrincipal -Credential $pscredential -Tenant ${{tenant_id}}
           ./PrePostDeploymentScript.ps1 `
                 -armTemplate "devcicdtesta/ARMTemplateForFactory.json" `
                 -ResourceGroupName "${{vars.Azure_RG}}" `
