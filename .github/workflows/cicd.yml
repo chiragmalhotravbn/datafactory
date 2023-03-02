@@ -53,8 +53,8 @@ jobs:
           resourceGroupName: ${{ vars.Azure_RG }}
           template: ${{ env.ARMTemplate }}
           parameters: ${{ env.ARMParameter }}
-            AzureBlobStorage1_connectionString: ${{ vars.AzureBlobStorage1_connectionString }}
-            factoryName: ${{ vars.factory_name }}
+            AzureBlobStorage1_connectionString= ${{ vars.AzureBlobStorage1_connectionString }}
+            factoryName= ${{ vars.factory_name }}
           deploymentMode: Incremental
       - name: Run Post-deployment script
         shell: pwsh
