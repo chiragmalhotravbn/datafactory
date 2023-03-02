@@ -30,13 +30,14 @@ jobs:
         run: if('${{ inputs.skipAzModuleInstallation }}' -ne 'true') { Install-Module -Name Az -Scope CurrentUser -Repository PSGallery -Force }
         shell: pwsh
     
-      - name: Run Pre-deployment script
-        uses: azure/powershell@v1
-        with: |
-          ./PrePostDeploymentScript.ps1 `
+      - name: Run Post-deployment script
+        shell: pwsh
+        run: |
+           $secretsJson =  ${{secrets.AZURE_CREDENTIALS}} 
+           & ./PrePostDeploymentScript.ps1 `
                 -armTemplate "devcicdtesta/ARMTemplateForFactory.json" `
                 -ResourceGroupName "${{vars.Azure_RG}}" `
                 -DataFactoryName "${{vars.factory_name}}" `
                 -predeployment $true `
                 -deleteDeployment $false `
-                -cred ${{secrets.AZURE_CREDENTIALS}}
+                -cred $secretsJson
