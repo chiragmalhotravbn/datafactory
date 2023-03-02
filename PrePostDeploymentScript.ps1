@@ -12,7 +12,7 @@ Write-output AzureCredentials
 
 $secrets = ConvertFrom-Json -InputObject $AzureCredentials 
 
-#Set Variable
+#Set Variables
 Write-output secrets
 
 $clientId = $secrets.clientId
