@@ -19,33 +19,10 @@ jobs:
       name: 'This deploys to QA'
       steps:
       - uses: actions/checkout@v3
-
-      - name: Azure Login
-        uses: Azure/login@v1.4.3
-        with:
-          # Paste output of `az ad sp create-for-rbac` as value of secret variable: AZURE_CREDENTIALS
-          creds: ${{secrets.AZURE_CREDENTIALS}}
       
-      - name: Install Az PowerShell module
-        run: if('${{ inputs.skipAzModuleInstallation }}' -ne 'true') { Install-Module -Name Az -Scope CurrentUser -Repository PSGallery -Force }
-        shell: pwsh
-    
       - name: Run Post-deployment script
         shell: pwsh
         run: |
-            $secrets = ${{secrets.AZURE_CREDENTIALS}}
-            $clientId = $secrets.clientId
-            $clientSecret = $secrets.clientSecret
-            $tenantId = $secrets.tenantId
-            $subscriptionId = $secrets.subscriptionId
-            & ./PrePostDeploymentScript.ps1 `
-                -armTemplate "devcicdtesta/ARMTemplateForFactory.json" `
-                -ResourceGroupName "${{vars.Azure_RG}}" `
-                -DataFactoryName "${{vars.factory_name}}" `
-                -predeployment $true `
-                -deleteDeployment $false `
-                -clientId $clientId `
-                -clientSecret $clientSecret `
-                -tenantId $tenantId `
-                -subscriptionId $subscriptionId
+            $secret = ${{secrets.AZURE_CREDENTIALS}}
+            write-output $secret
                 
