@@ -33,9 +33,9 @@ jobs:
       - name: Run Pre-deployment script
         shell: pwsh
         env:
-          SP_ID: ${{ vars.CLIENT_ID }}
+          SP_ID: ${{ secrets.CLIENT_ID }}
           SP_SECRET: ${{ secrets.CLIENT_SECRET }}
-          SP_TENANT: ${{ vars.TENANT_ID }}
+          SP_TENANT: ${{ secrets.TENANT_ID }}
         run: |
           $securePassword = ConvertTo-SecureString -String $env:SP_SECRET -AsPlainText -Force
           $psCredential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList ($env:SP_ID, $securePassword)
@@ -64,7 +64,14 @@ jobs:
           deploymentMode: Incremental
       
       - name: Run Post-deployment script
+        env:
+          SP_ID: ${{ secrets.CLIENT_ID }}
+          SP_SECRET: ${{ secrets.CLIENT_SECRET }}
+          SP_TENANT: ${{ secrets.TENANT_ID }}
         run: |
+          $securePassword = ConvertTo-SecureString -String $env:SP_SECRET -AsPlainText -Force
+          $psCredential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList ($env:SP_ID, $securePassword)
+          Connect-AzAccount -ServicePrincipal -Credential $psCredential -TenantId $env:SP_TENANT
           ./PrePostDeploymentScript.ps1 `
              	-armTemplate "devcicdtesta/ARMTemplateForFactory.json" `
                 -ResourceGroupName "${{ inputs.resourceGroupName }}" `
@@ -92,7 +99,14 @@ jobs:
         shell: pwsh
 
       - name: Run Pre-deployment script
+        env:
+          SP_ID: ${{ secrets.CLIENT_ID }}
+          SP_SECRET: ${{ secrets.CLIENT_SECRET }}
+          SP_TENANT: ${{ secrets.TENANT_ID }}
         run: |
+          $securePassword = ConvertTo-SecureString -String $env:SP_SECRET -AsPlainText -Force
+          $psCredential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList ($env:SP_ID, $securePassword)
+          Connect-AzAccount -ServicePrincipal -Credential $psCredential -TenantId $env:SP_TENANT
           .\PrePostDeploymentScript.ps1 `
             -armTemplate " ${{env.ARMTemplate}}" `
             -ResourceGroupName "${{vars.Azure_RG}}" `
@@ -120,7 +134,15 @@ jobs:
 
       - name: Run Post-deployment script
         shell: pwsh
+        env:
+          SP_ID: ${{ secrets.CLIENT_ID }}
+          SP_SECRET: ${{ secrets.CLIENT_SECRET }}
+          SP_TENANT: ${{ secrets.TENANT_ID }}
         run: |
+          $securePassword = ConvertTo-SecureString -String $env:SP_SECRET -AsPlainText -Force
+          $psCredential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList ($env:SP_ID, $securePassword)
+          Connect-AzAccount -ServicePrincipal -Credential $psCredential -TenantId $env:SP_TENANT
+          
           ./PrePostDeploymentScript.ps1 `
             -armTemplate " ${{env.ARMTemplate}}" `
             -ResourceGroupName "${{vars.Azure_RG}}" `
