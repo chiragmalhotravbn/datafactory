@@ -9,8 +9,8 @@ on:
 
 #Define the environment variables that will be used in the workflow
 env:
-  ARMTemplate: "./devcicdtesta/ARMTemplateForFactory.json"
-  ARMParameter: "./devcicdtesta/ARMTemplateParametersForFactory.json"
+  ARMTemplate: "devcicdtesta/ARMTemplateForFactory.json"
+  ARMParameter: "devcicdtesta/ARMTemplateParametersForFactory.json"
   
 #Define the jobs that will run as part of the workflow
 jobs:
@@ -49,7 +49,7 @@ jobs:
                 -armTemplate "devcicdtesta/ARMTemplateForFactory.json" `
                 -ResourceGroupName "${{ vars.Azure_RG }}" `
                 -DataFactoryName "${{ vars.factory_name }}" `
-                -ArmTemplateParameters "devcicdtesta/ARMTemplateParametersForFactory.json" `
+                -ArmTemplateParameters "${{ env.ARMTemplate }}" `
                 -predeployment $true `
                 -deleteDeployment $false
                 
@@ -63,8 +63,8 @@ jobs:
           resourceGroupName: ${{vars.Azure_RG}}
           # Specify the path to the ADF ARM template. In this scenario, the workflow is in the same branch, 
           # hence we only add the folder and arm template name to the path
-          template:  ${{env.ARMTemplate}}
-          parameters: ${{env.ARMParameter}}
+          template:  "./${{env.ARMTemplate}}"
+          parameters: "./${{env.ARMParameter}}"
             AzureBlobStorage1_connectionString=${{vars.AzureBlobStorage1_connectionString}}
             factoryName=${{vars.factory_name}}
 
@@ -79,7 +79,7 @@ jobs:
              	-armTemplate "devcicdtesta/ARMTemplateForFactory.json" `
                 -ResourceGroupName "${{vars.Azure_RG}}" `
                 -DataFactoryName "${{vars.factory_name}}" `
-                -ArmTemplateParameters "devcicdtesta/ARMTemplateParametersForFactory.json" `
+                -ArmTemplateParameters "${{ env.ARMTemplate }}" `
                 -predeployment $false `
                 -deleteDeployment $true
                 
@@ -119,7 +119,7 @@ jobs:
                 -armTemplate "devcicdtesta/ARMTemplateForFactory.json" `
                 -ResourceGroupName "${{vars.Azure_RG}}" `
                 -DataFactoryName "${{vars.factory_name}}" `
-                -ArmTemplateParameters "devcicdtesta/ARMTemplateParametersForFactory.json" `
+                -ArmTemplateParameters "${{ env.ARMTemplate }}" `
                 -predeployment $true `
                 -deleteDeployment $false
                 
@@ -133,8 +133,8 @@ jobs:
           resourceGroupName: ${{vars.Azure_RG}}
           # Specify the path to the ADF ARM template. In this scenario, the workflow is in the same branch, 
           # hence we only add the folder and arm template name to the path
-          template:  ${{env.ARMTemplate}}
-          parameters: ${{env.ARMParameter}}
+          template:  "./${{env.ARMTemplate}}"
+          parameters: "./${{env.ARMParameter}}"
             AzureBlobStorage1_connectionString=${{vars.AzureBlobStorage1_connectionString}}
             factoryName=${{vars.factory_name}}
 
@@ -149,6 +149,6 @@ jobs:
              	-armTemplate "devcicdtesta/ARMTemplateForFactory.json" `
                 -ResourceGroupName "${{vars.Azure_RG}}" `
                 -DataFactoryName "${{vars.factory_name}}" `
-                -ArmTemplateParameters "devcicdtesta/ARMTemplateParametersForFactory.json" `
+                -ArmTemplateParameters "${{ env.ARMTemplate }}" `
                 -predeployment $false `
                 -deleteDeployment $true
