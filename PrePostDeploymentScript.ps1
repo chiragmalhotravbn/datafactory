@@ -7,6 +7,7 @@ param
     [parameter(Mandatory = $false)] [Bool] $deleteDeployment=$false,
     [parameter(Mandatory = $false)] $cred
 )
+$secrets = $secretsJson | ConvertFrom-Json
 $ConnectAzure = Connect-AzAccount -Credential $cred
 
 function getPipelineDependencies {
