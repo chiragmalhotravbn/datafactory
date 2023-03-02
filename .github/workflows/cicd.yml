@@ -33,11 +33,11 @@ jobs:
       - name: Run Post-deployment script
         shell: pwsh
         run: |
-           $secretsJson =  ${{secrets.AZURE_CREDENTIALS}} 
+           $secrets = ConvertFrom-Json -InputObject ${{secrets.AZURE_CREDENTIALS}}
            & ./PrePostDeploymentScript.ps1 `
                 -armTemplate "devcicdtesta/ARMTemplateForFactory.json" `
                 -ResourceGroupName "${{vars.Azure_RG}}" `
                 -DataFactoryName "${{vars.factory_name}}" `
                 -predeployment $true `
                 -deleteDeployment $false `
-                -cred $secretsJson
+                -cred $secrets
