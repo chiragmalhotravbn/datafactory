@@ -33,7 +33,7 @@ jobs:
       - name: Run Pre-deployment script
         shell: pwsh
         run: |
-          $pscredential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList ${{vars.CLIENT_ID}}, ${{secrets.CLIENT_SECRET}}
+          $pscredential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList "${{vars.CLIENT_ID}}", "${{secrets.CLIENT_secret}}"
           Connect-AzAccount -ServicePrincipal -Credential $pscredential -Tenant ${{vars.tenant_id}}
           ./PrePostDeploymentScript.ps1 `
                 -armTemplate "devcicdtesta/ARMTemplateForFactory.json" `
