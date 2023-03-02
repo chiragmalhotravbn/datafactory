@@ -5,10 +5,22 @@ param
     [parameter(Mandatory = $false)] [String] $DataFactoryName,
     [parameter(Mandatory = $false)] [Bool] $predeployment=$true,
     [parameter(Mandatory = $false)] [Bool] $deleteDeployment=$false,
-    [parameter(Mandatory = $false)] $cred
+    [parameter(Mandatory = $false)] $AzureCredentials
 )
-$secrets = $secretsJson | ConvertFrom-Json
-$ConnectAzure = Connect-AzAccount -Credential $cred
+
+$secrets = ConvertFrom-Json -InputObject $AzureCredentials 
+#Set Variable
+
+$clientId = $cred.clientId
+$clientSecret = $cred.clientSecret
+$subscriptionId = $cred.subscriptionId
+$tenantId = $cred.tenantId
+
+$secureClientSecret = ConvertTo-SecureString $clientSecret -AsPlainText -Force
+$credential = New-Object System.Management.Automation.PSCredential ($clientId, $secureClientSecret)
+
+Connect-AzAccount -Credential $credential -Tenant $tenantId -ServicePrincipal
+Select-AzSubscription -SubscriptionId $subscriptionId
 
 function getPipelineDependencies {
     param([System.Object] $activity)
