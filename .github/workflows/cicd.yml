@@ -32,13 +32,12 @@ jobs:
 
       - name: Run Pre-deployment script
         shell: pwsh
-        run: |
-          .\PrePostDeploymentScript.ps1 `
-            -armTemplate " ${{env.ARMTemplate}}" `
-            -ResourceGroupName "${{vars.Azure_RG}}" `
-            -DataFactoryName "${{vars.factory_name}}" `
-            -predeployment $true `
-            -deleteDeployment $false
+        run: ./PrePostDeploymentScript.ps1 `
+                -armTemplate " ${{env.ARMTemplate}}" `
+                -ResourceGroupName "${{vars.Azure_RG}}" `
+                -DataFactoryName "${{vars.factory_name}}" `
+                -predeployment $true `
+                -deleteDeployment $false
 
       - name: Deploy Azure Resource Manager (ARM) Template
         uses: Azure/arm-deploy@v1.0.6
@@ -58,13 +57,12 @@ jobs:
           deploymentMode: Incremental
       
       - name: Run Post-deployment script
-        run: |
-          ${{ github.action_path }}/PrePostDeploymentScript.ps1 `
-            -armTemplate "${{ inputs.armTemplateFile }}" `
-            -ResourceGroupName "${{ inputs.resourceGroupName }}" `
-            -DataFactoryName '${{ inputs.dataFactoryName }}' `
-            -predeployment $false `
-            -deleteDeployment $true
+        run: ./PrePostDeploymentScript.ps1 `
+                -armTemplate "${{ inputs.armTemplateFile }}" `
+                -ResourceGroupName "${{ inputs.resourceGroupName }}" `
+                -DataFactoryName '${{ inputs.dataFactoryName }}' `
+                -predeployment $false `
+                -deleteDeployment $true
         shell: pwsh
         
     deploy-to-prod:
