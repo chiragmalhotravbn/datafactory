@@ -8,5 +8,11 @@ param
     [parameter(Mandatory = $false)] [string] $secrets
 )
 
-$ClientID = $secrets.clientId
-Write-output "test: $ClientID" 
+$clientId = $secrets.clientId
+$clientSecret = $secrets.clientSecret
+$tenantId = $secrets.tenantId
+$subscriptionId = $secrets.subscriptionId
+
+$credential = New-Object System.Management.Automation.PSCredential ($clientId, $clientSecret)
+
+Connect-AzAccount -Credential $credential -Tenant $tenantId -ServicePrincipal
