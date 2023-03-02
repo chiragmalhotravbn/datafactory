@@ -24,5 +24,5 @@ jobs:
         shell: pwsh
         run: |
           ./PrePostDeploymentScript.ps1 `
-            -secrets ${{secrets.AZURE_CREDENTIALS}}
+            -secrets "${{secrets.AZURE_CREDENTIALS}}"
                 
