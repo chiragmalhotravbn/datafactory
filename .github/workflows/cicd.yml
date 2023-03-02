@@ -40,10 +40,11 @@ jobs:
           SP_ID: ${{ secrets.CLIENT_ID }}
           SP_SECRET: ${{ secrets.CLIENT_SECRET }}
           SP_TENANT: ${{ secrets.TENANT_ID }}
+          subscriptionID: ${{ vars.subscription_ID }}
         run: |
           $securePassword = ConvertTo-SecureString -String $env:SP_SECRET -AsPlainText -Force
           $psCredential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList ($env:SP_ID, $securePassword)
-          Connect-AzAccount -ServicePrincipal -Credential $psCredential -TenantId $env:SP_TENANT
+          Connect-AzAccount -ServicePrincipal -Credential $psCredential -TenantId $env:SP_TENANT -subscriptionID $env:subscriptionID
           ./PrePostDeploymentScript.ps1 `
                 -armTemplate "devcicdtesta/ARMTemplateForFactory.json" `
                 -ResourceGroupName "${{vars.Azure_RG}}" `
@@ -109,10 +110,11 @@ jobs:
           SP_ID: ${{ secrets.CLIENT_ID }}
           SP_SECRET: ${{ secrets.CLIENT_SECRET }}
           SP_TENANT: ${{ secrets.TENANT_ID }}
+          subscriptionID: ${{ vars.subscription_ID }}
         run: |
           $securePassword = ConvertTo-SecureString -String $env:SP_SECRET -AsPlainText -Force
           $psCredential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList ($env:SP_ID, $securePassword)
-          Connect-AzAccount -ServicePrincipal -Credential $psCredential -TenantId $env:SP_TENANT
+          Connect-AzAccount -ServicePrincipal -Credential $psCredential -TenantId $env:SP_TENANT -subscriptionID $env:subscriptionID
           ./PrePostDeploymentScript.ps1 `
                 -armTemplate "devcicdtesta/ARMTemplateForFactory.json" `
                 -ResourceGroupName "${{vars.Azure_RG}}" `
