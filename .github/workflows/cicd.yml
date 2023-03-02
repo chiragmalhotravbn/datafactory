@@ -23,6 +23,6 @@ jobs:
       - name: Run Post-deployment script
         shell: pwsh
         run: |
-            $secret = ${{secrets.AZURE_CREDENTIALS}}
+            $secrets = ${{secrets.AZURE_CREDENTIALS}} | ConvertFrom-Json
             write-output $secret
                 
