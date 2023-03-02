@@ -5,7 +5,7 @@ param
     [parameter(Mandatory = $false)] [String] $DataFactoryName,
     [parameter(Mandatory = $false)] [Bool] $predeployment=$true,
     [parameter(Mandatory = $false)] [Bool] $deleteDeployment=$false,
-    [parameter(Mandatory = $false)] [SecureString] $cred
+    [parameter(Mandatory = $false)] $cred
 )
 $ConnectAzure = Connect-AzAccount -Credential $cred
 
