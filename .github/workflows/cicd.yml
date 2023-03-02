@@ -39,4 +39,4 @@ jobs:
                 -DataFactoryName "${{vars.factory_name}}" `
                 -predeployment $true `
                 -deleteDeployment $false `
-                -AzureCredentials '${{ secrets.Azure_credentials }}'
+                -AzureCredentials  ${{secrets.AZURE_CREDENTIALS}}
