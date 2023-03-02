@@ -10,7 +10,7 @@ param
 
 Write-output AzureCredentials
 
-$secrets = ConvertFrom-Json -InputObject $AzureCredentials 
+$secrets = $cred | ConvertFrom-Json
 
 #Set Variabless
 Write-output secrets
