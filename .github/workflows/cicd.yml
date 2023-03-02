@@ -119,6 +119,4 @@ jobs:
             -ResourceGroupName "${{vars.Azure_RG}}" `
             -DataFactoryName "${{vars.factory_name}}" `
             -predeployment $false `
-            -deleteDeployment $true
-
-                
+            -deleteDeployment $true         
