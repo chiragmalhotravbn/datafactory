@@ -10,8 +10,8 @@ on:
       - adf_publish
   workflow_dispatch:
 env:
-  ARMTemplate: ./devcicdtesta/ARMTemplateForFactory.json
-  ARMParameter: ./devcicdtesta/ARMTemplateParametersForFactory.json
+  ARMTemplate: "./devcicdtesta/ARMTemplateForFactory.json"
+  ARMParameter: "./devcicdtesta/ARMTemplateParametersForFactory.json"
 jobs:
     deploy-to-qa:
       runs-on: ubuntu-latest
@@ -33,7 +33,7 @@ jobs:
       - name: Run Pre-deployment script
         shell: pwsh
         run: ./PrePostDeploymentScript.ps1 `
-                -armTemplate " ${{env.ARMTemplate}}" `
+                -armTemplate "ARMTemplateForFactory.json" `
                 -ResourceGroupName "${{vars.Azure_RG}}" `
                 -DataFactoryName "${{vars.factory_name}}" `
                 -predeployment $true `
@@ -58,7 +58,7 @@ jobs:
       
       - name: Run Post-deployment script
         run: ./PrePostDeploymentScript.ps1 `
-                -armTemplate "${{ inputs.armTemplateFile }}" `
+                -armTemplate "ARMTemplateForFactory.json" `
                 -ResourceGroupName "${{ inputs.resourceGroupName }}" `
                 -DataFactoryName '${{ inputs.dataFactoryName }}' `
                 -predeployment $false `
