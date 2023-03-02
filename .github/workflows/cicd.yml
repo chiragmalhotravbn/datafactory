@@ -63,9 +63,9 @@ jobs:
           resourceGroupName: ${{vars.Azure_RG}}
           # Specify the path to the ADF ARM template. In this scenario, the workflow is in the same branch, 
           # hence we only add the folder and arm template name to the path
-          template:  "./${{env.ARMTemplate}}"
-          parameters: "./${{env.ARMParameter}}"
-            AzureBlobStorage1_connectionString=${{vars.AzureBlobStorage1_connectionString}}
+          template:  ./${{env.ARMTemplate}}
+          parameters: ./${{env.ARMParameter}} 
+            AzureBlobStorage1_connectionString= ${{vars.AzureBlobStorage1_connectionString}}
             factoryName=${{vars.factory_name}}
 
           # Incremental (only add resources to resource group) or Complete (remove extra resources from resource group) or Validate (only validates the template).
@@ -133,8 +133,8 @@ jobs:
           resourceGroupName: ${{vars.Azure_RG}}
           # Specify the path to the ADF ARM template. In this scenario, the workflow is in the same branch, 
           # hence we only add the folder and arm template name to the path
-          template:  "./${{env.ARMTemplate}}"
-          parameters: "./${{env.ARMParameter}}"
+          template:  ./${{env.ARMTemplate}}
+          parameters: ./${{env.ARMParameter}}
             AzureBlobStorage1_connectionString=${{vars.AzureBlobStorage1_connectionString}}
             factoryName=${{vars.factory_name}}
 
