@@ -30,7 +30,7 @@ jobs:
           # Paste output of `az ad sp create-for-rbac` as value of secret variable: AZURE_CREDENTIALS
           creds: ${{secrets.AZURE_CREDENTIALS}}
           
-      - name: Run Post-deployment script
+      - name: Run Pre-deployment script
         shell: pwsh
         run: |
           ./PrePostDeploymentScript.ps1 `
@@ -39,7 +39,7 @@ jobs:
                 -DataFactoryName "${{vars.factory_name}}" `
                 -predeployment $true `
                 -deleteDeployment $false
-				
+	
       - name: Deploy Azure Resource Manager (ARM) Template
         uses: Azure/arm-deploy@v1.0.6
         with:
