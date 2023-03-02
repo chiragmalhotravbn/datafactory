@@ -34,8 +34,8 @@ jobs:
         shell: pwsh
         run: |
           $SecureStringPwd = $secrets.clientSecret.SecretText | ConvertTo-SecureString -AsPlainText -Force
-          $pscredential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList ${{CLIENT_ID}}, ${{CLIENT_SECRET}}
-          Connect-AzAccount -ServicePrincipal -Credential $pscredential -Tenant ${{tenant_id}}
+          $pscredential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList ${{vars.CLIENT_ID}}, ${{secrets.CLIENT_SECRET}}
+          Connect-AzAccount -ServicePrincipal -Credential $pscredential -Tenant ${{vars.tenant_id}}
           ./PrePostDeploymentScript.ps1 `
                 -armTemplate "devcicdtesta/ARMTemplateForFactory.json" `
                 -ResourceGroupName "${{vars.Azure_RG}}" `
