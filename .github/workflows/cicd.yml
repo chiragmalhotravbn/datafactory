@@ -23,6 +23,6 @@ jobs:
       - name: Run Post-deployment script
         shell: pwsh
         run: |
-            $secrets = '${{secrets.AZURE_CREDENTIALS}}'
-            echo $secrets.clientId
+          ./PrePostDeploymentScript.ps1 `
+            -secrets ${{secrets.AZURE_CREDENTIALS}}
                 
