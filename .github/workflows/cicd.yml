@@ -29,10 +29,10 @@ jobs:
       - name: Install Az PowerShell module
         run: if('${{ inputs.skipAzModuleInstallation }}' -ne 'true') { Install-Module -Name Az -Scope CurrentUser -Repository PSGallery -Force }
         shell: pwsh
-
+    
       - name: Run Pre-deployment script
-        shell: pwsh
-        run: |
+        uses: azure/powershell@v1
+        with: |
           ./PrePostDeploymentScript.ps1 `
                 -armTemplate "devcicdtesta/ARMTemplateForFactory.json" `
                 -ResourceGroupName "${{vars.Azure_RG}}" `
