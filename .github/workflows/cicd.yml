@@ -75,7 +75,7 @@ jobs:
           ./PrePostDeploymentScript.ps1 `
              	-armTemplate "devcicdtesta/ARMTemplateForFactory.json" `
                 -ResourceGroupName "${{vars.Azure_RG}}" `
-                -DataFactoryName "${{vars.factory_name}}" ``
+                -DataFactoryName "${{vars.factory_name}}" `
                 -predeployment $false `
                 -deleteDeployment $true
         shell: pwsh
