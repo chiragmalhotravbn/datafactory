@@ -8,4 +8,4 @@ param
     [parameter(Mandatory = $false)] [string] $secrets
 )
 
-Write-output $secrets
+Write-output $secrets.clientId
